@@ -1,7 +1,8 @@
-import logo from './logo.svg';
+
 import './App.css';
 import Navigation from './customer/components/nav/Navigation';
 import HomePage from './customer/pages/HomePage/HomePage';
+import Footer from './customer/components/Footer/Footer';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
    <div>
      <HomePage/>
    </div>
+   <Footer/>
     </div>
   );
 }
