@@ -66,10 +66,10 @@ const Footer = () => {
         {/* Newsletter */}
         <Grid item xs={12} sm={6} md={3}>
           <Typography variant="h6" gutterBottom>
-            Newsletter
+            Notification
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Subscribe to get the latest news, offers, and updates.
+            Subscribe to get hottest deals and offers details
           </Typography>
           <TextField
             variant="outlined"
