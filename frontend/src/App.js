@@ -7,6 +7,9 @@ import Products from './customer/components/Products/Products';
 import ProductDetails from './customer/components/ProductDetails/ProductDetails';
 import Cart from './customer/components/Cart/Cart';
 import Checkout from './customer/components/Checkout/Checkout';
+import Order from './customer/components/Order/Order'
+import OrderDetails from './customer/components/Order/OrderDetails';
+
 
 function App() {
   return (
@@ -17,7 +20,14 @@ function App() {
      {/* <Products/> */}
      {/* <ProductDetails/> */}
      {/* <Cart/> */}
+<<<<<<< HEAD
+     {/* <Checkout/> */}
+     {/*<Order/> */}
+     {<OrderDetails/>}
+     
+=======
      {/* <Checkout /> */}
+>>>>>>> main
    </div>
    <Footer/>
     </div>
