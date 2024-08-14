@@ -33,10 +33,16 @@ public class AuthController {
 	
 	private CustomerUserServiceImplementation customerUserService;
 	
-	public AuthController(UserRepository userRepository , CustomerUserServiceImplementation customerUserService, PasswordEncoder passwordEncoder) {
+	
+
+
+
+	public AuthController(UserRepository userRepository, JwtProvider jwtProvider, PasswordEncoder passwordEncoder,
+			CustomerUserServiceImplementation customerUserService) {
 		this.userRepository = userRepository;
-		this.customerUserService=customerUserService;
-		this.passwordEncoder=passwordEncoder;
+		this.jwtProvider = jwtProvider;
+		this.passwordEncoder = passwordEncoder;
+		this.customerUserService = customerUserService;
 	}
 
 
@@ -70,7 +76,9 @@ public class AuthController {
 		
 		String token=jwtProvider.generateToken(authentication);
 		
-		AuthResponse authResponse= new AuthResponse(token, "Signup Success");
+		AuthResponse authResponse= new AuthResponse();
+		authResponse.setJwt(token);
+		authResponse.setMessage("Signup Success !!");
 		
 		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
 	}
@@ -89,7 +97,7 @@ public class AuthController {
 		
         String token=jwtProvider.generateToken(authentication);
 		
-		AuthResponse authResponse= new AuthResponse(token, "Signin Success");
+		AuthResponse authResponse= new AuthResponse(token, "Signin Success !!");
 		
 		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
 		
