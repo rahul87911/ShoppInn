@@ -20,14 +20,10 @@ function App() {
      {/* <Products/> */}
      {/* <ProductDetails/> */}
      {/* <Cart/> */}
-<<<<<<< HEAD
      {/* <Checkout/> */}
      {/*<Order/> */}
      {<OrderDetails/>}
      
-=======
-     {/* <Checkout /> */}
->>>>>>> main
    </div>
    <Footer/>
     </div>
