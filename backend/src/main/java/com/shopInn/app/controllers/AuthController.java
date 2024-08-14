@@ -2,10 +2,13 @@ package com.shopInn.app.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shopInn.app.exception.UserException;
 import com.shopInn.app.model.User;
 import com.shopInn.app.repo.UserRepository;
+import com.shopInn.app.request.LoginRequest;
 import com.shopInn.app.response.AuthResponse;
+import com.shopInn.app.service.serviceImpl.CustomerUserServiceImplementation;
 import com.shopInn.appconfig.JwtProvider;
 
 @RestController
@@ -26,12 +31,17 @@ public class AuthController {
 	
 	private PasswordEncoder passwordEncoder;
 	
-	public AuthController(UserRepository userRepository) {
+	private CustomerUserServiceImplementation customerUserService;
+	
+	public AuthController(UserRepository userRepository , CustomerUserServiceImplementation customerUserService, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
+		this.customerUserService=customerUserService;
+		this.passwordEncoder=passwordEncoder;
 	}
 
 
 
+	@PostMapping("/signup")
 	public ResponseEntity<AuthResponse>createUserHandler(@RequestBody User user) throws UserException{
 		
 		String email=user.getEmail();
@@ -64,4 +74,44 @@ public class AuthController {
 		
 		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
 	}
+	
+	
+	
+	@PostMapping("/signin")
+	public ResponseEntity<AuthResponse>loginUserHandler(@RequestBody LoginRequest loginRequest)
+	{
+		String  username=loginRequest.getEmail();
+		String password= loginRequest.getPassword();
+		
+		Authentication authentication=authenticate(username,password);
+		
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+        String token=jwtProvider.generateToken(authentication);
+		
+		AuthResponse authResponse= new AuthResponse(token, "Signin Success");
+		
+		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
+		
+
+	}
+
+
+
+	private Authentication authenticate(String username, String password) {
+		UserDetails userDetails = customerUserService.loadUserByUsername(username);
+		
+		if(userDetails==null)
+		{
+			throw new BadCredentialsException("Invalid Username !!");
+		}
+		
+		if(!passwordEncoder.matches(password, userDetails.getPassword()))
+		{
+			throw new BadCredentialsException("Invalid Password !!");
+		}
+		
+		return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+	}
+	
 }
