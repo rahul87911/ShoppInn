@@ -34,7 +34,6 @@ export default function Navigation() {
     navigate(`/${category.id}/${section.id}/${item.id}`);
     close();
   };
-
   return (
     <div className="bg-white pb-10">
       {/* Mobile menu */}
@@ -378,9 +377,8 @@ export default function Navigation() {
                     }}
                   >
                     <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      My account
-                    </MenuItem>
+                    <MenuItem onClick={()=>navigate("/account/order")}>My order</MenuItem>
+                    <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem>
                     <MenuItem onClick={handleCloseUserMenu}>Logout</MenuItem>
                   </Menu>
                 </div>

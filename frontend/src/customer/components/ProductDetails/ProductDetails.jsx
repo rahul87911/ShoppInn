@@ -6,6 +6,7 @@ import { color } from "./../../../data/FilterData";
 import ProductReviewCard from "./ProductReviewCard";
 import { mens_kurta } from './../../../data/mens_kurta';
 import HomeSectionCard from './../HomeSectionCard/HomeSectionCard';
+import { useNavigate } from "react-router-dom";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -64,7 +65,10 @@ function classNames(...classes) {
 export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
-
+  const navigate = useNavigate();
+  const handleAddToCart=() => {
+    navigate("/cart")
+  }
   return (
     <div className="bg-white lg:px-20">
       <div className="pt-6">
@@ -223,6 +227,7 @@ export default function ProductDetails() {
 
                 <div className="flex mt-4">
                   <Button
+                    onClick={handleAddToCart}
                     variant="contained"
                     sx={{ px: "1rem", py: "0.5rem", bgcolor: "#9155fd" }}
                   >
