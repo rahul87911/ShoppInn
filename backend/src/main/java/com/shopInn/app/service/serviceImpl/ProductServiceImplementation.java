@@ -95,30 +95,51 @@ public class ProductServiceImplementation implements ProductService {
 		return savedProduct;
 	}
 
+	
+	
+	
 	@Override
 	public String deleteProduct(Long productId) throws ProductException {
-		// TODO Auto-generated method stub
-		return null;
+		Product product=findProductById(productId);
+		product.getSizes().clear();
+		productRepository.delete(product);
+		return "Product deleted Successfully !!";
 	}
 
+	
+	
+	
 	@Override
 	public Product updateProduct(Long productId, Product product) throws ProductException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	
+	
+	
+	
 	@Override
 	public Product findProductById(Long id) throws ProductException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	
+	
+	
+	
 	@Override
 	public List<Product> findProductByCategory(String category) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	
+	
+	
+	
+	
 	@Override
 	public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizes, Integer minPrice,
 			Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
