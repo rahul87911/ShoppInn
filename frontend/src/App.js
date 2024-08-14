@@ -16,14 +16,18 @@ function App() {
     <div className="App">
     <Navigation/>
    <div>
-     {/* <HomePage/> */}
+    {/* <HomePage/>  */}
      {/* <Products/> */}
      {/* <ProductDetails/> */}
      {/* <Cart/> */}
+<<<<<<< HEAD
      {/* <Checkout/> */}
      {/*<Order/> */}
      {<OrderDetails/>}
      
+=======
+     {/* <Checkout /> */}
+>>>>>>> main
    </div>
    <Footer/>
     </div>
