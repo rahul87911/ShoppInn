@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.shopInn.app.model.Category;
 import com.shopInn.app.model.Product;
 import java.util.*;
 
@@ -21,4 +22,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                         @Param("maxPrice") Integer maxPrice,
                                         @Param("minDiscount") Integer minDiscount,
                                         @Param("sort") String sort);
+    
+    List<Product> findByCategory(Category category);
 }

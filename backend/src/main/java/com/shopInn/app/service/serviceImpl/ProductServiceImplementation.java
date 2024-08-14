@@ -186,9 +186,18 @@ public class ProductServiceImplementation implements ProductService {
 	
 	
 	@Override
-	public List<Product> findProductByCategory(String category) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Product> findProductByCategory(String category) throws ProductException {
+	    // Find the category by name
+	    Category categoryEntity = categoryRepository.findByName(category);
+	    
+	    if (categoryEntity == null) {
+	        throw new ProductException("Category not found: " + category);
+	    }
+	    
+	    // Fetch products by category
+	    List<Product> products = productRepository.findByCategory(categoryEntity);
+	    
+	    return products;
 	}
 
 	
