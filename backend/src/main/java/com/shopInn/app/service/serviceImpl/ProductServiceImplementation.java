@@ -110,9 +110,59 @@ public class ProductServiceImplementation implements ProductService {
 	
 	
 	@Override
-	public Product updateProduct(Long productId, Product product) throws ProductException {
-		// TODO Auto-generated method stub
-		return null;
+	public Product updateProduct(Long productId, Product req) throws ProductException {
+		Product product=findProductById(productId);
+		
+		
+		    if (req.getTitle() != null) {
+		        product.setTitle(req.getTitle());
+		    }
+
+		    if (req.getColor() != null) {
+		        product.setColor(req.getColor());
+		    }
+
+		    if (req.getDescription() != null) {
+		        product.setDescription(req.getDescription());
+		    }
+
+		    if (req.getDiscountedPrice() != 0) {
+		        product.setDiscountedPrice(req.getDiscountedPrice());
+		    }
+
+		    if (req.getDiscountPercent() != 0) {
+		        product.setDiscountPercent(req.getDiscountPercent());
+		    }
+
+		    if (req.getImageUrl() != null) {
+		        product.setImageUrl(req.getImageUrl());
+		    }
+
+		    if (req.getBrand() != null) {
+		        product.setBrand(req.getBrand());
+		    }
+
+		    if (req.getPrice() != 0) {
+		        product.setPrice(req.getPrice());
+		    }
+
+		    if (req.getSizes() != null && !req.getSizes().isEmpty()) {
+		        product.setSizes(req.getSizes());
+		    }
+
+		    if (req.getQuantity() != 0) {
+		        product.setQuantity(req.getQuantity());
+		    }
+
+		    if (req.getCategory() != null) {
+		        product.setCategory(req.getCategory());
+		    }
+		
+     		if(req.getQuantity()!=0) {
+			product.setQuantity(req.getQuantity());
+	    	}
+     		
+		return productRepository.save(product);
 	}
 
 	
