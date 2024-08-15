@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@Table(name = "orders")
 public class Order {
 
 	@Id
@@ -18,6 +19,9 @@ public class Order {
 	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL)
 	private List<OrderItem>orderItems=new ArrayList<>();
 	
+	@ManyToOne
+	private User user;
+	
 	private LocalDateTime orderDate;
 	
 	private LocalDateTime deliveryDate;
@@ -25,6 +29,7 @@ public class Order {
 	@OneToOne
 	private Address shippingAddress;
 	
+	@Embedded
 	private PaymentDetails paymentDetails = new PaymentDetails();
 	
 	private double totalPrice;
@@ -38,10 +43,26 @@ public class Order {
 	private int totalItem;
 	
 	private LocalDateTime createdAt;
+	
+	
 
 	public Order() {}
 
-	public Order(Long id, String orderId, List<OrderItem> orderItems, LocalDateTime orderDate,
+	
+
+	public User getUser() {
+		return user;
+	}
+
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+
+	public Order(Long id, String orderId, List<OrderItem> orderItems, User user, LocalDateTime orderDate,
 			LocalDateTime deliveryDate, Address shippingAddress, PaymentDetails paymentDetails, double totalPrice,
 			Integer totalDiscountedPrice, Integer discount, String orderStatus, int totalItem,
 			LocalDateTime createdAt) {
@@ -49,6 +70,7 @@ public class Order {
 		this.id = id;
 		this.orderId = orderId;
 		this.orderItems = orderItems;
+		this.user = user;
 		this.orderDate = orderDate;
 		this.deliveryDate = deliveryDate;
 		this.shippingAddress = shippingAddress;
@@ -60,6 +82,8 @@ public class Order {
 		this.totalItem = totalItem;
 		this.createdAt = createdAt;
 	}
+
+
 
 	public Long getId() {
 		return id;

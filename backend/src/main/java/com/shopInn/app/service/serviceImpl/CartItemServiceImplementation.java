@@ -12,7 +12,6 @@ import com.shopInn.app.model.CartItem;
 import com.shopInn.app.model.Product;
 import com.shopInn.app.model.User;
 import com.shopInn.app.repo.CartItemRepository;
-import com.shopInn.app.repo.CartRepository;
 import com.shopInn.app.service.CartItemService;
 import com.shopInn.app.service.UserService;
 
@@ -30,8 +29,6 @@ public class CartItemServiceImplementation implements CartItemService {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private CartRepository cartRepository;
 	
 	
 	@Override
@@ -40,7 +37,7 @@ public class CartItemServiceImplementation implements CartItemService {
 		cartItem.setPrice(cartItem.getProduct().getPrice()*cartItem.getQuantity());
 		cartItem.setDiscountedPrice(cartItem.getProduct().getDiscountedPrice()*cartItem.getQuantity());
 		
-		CartItem createdCartItem=cartItemRepository.save(cartItem)
+		CartItem createdCartItem=cartItemRepository.save(cartItem);
 		
 		return createdCartItem;
 	}
@@ -62,7 +59,7 @@ public class CartItemServiceImplementation implements CartItemService {
 
 	@Override
 	public CartItem isCartItemExist(Cart cart, Product product, String size, Long userId) {
-		CartItem cartItem=cartItemRepository.isCartItemExist(cart, product, size, userId);
+		CartItem cartItem=cartItemRepository.findCartItem(cart, product, size, userId);
 		
 		
 		return cartItem;
@@ -93,7 +90,7 @@ public class CartItemServiceImplementation implements CartItemService {
 			return opt.get();
 		}
 		throw new CartItemException("cartItem not found with id"+cartItemId);
-		return null;
+		
 	}
 
 }

@@ -1,0 +1,47 @@
+package com.shopInn.app.service.serviceImpl;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.shopInn.app.exception.ProductException;
+import com.shopInn.app.model.Product;
+import com.shopInn.app.model.Rating;
+import com.shopInn.app.model.User;
+import com.shopInn.app.repo.RatingRepository;
+import com.shopInn.app.request.RatingRequest;
+import com.shopInn.app.service.ProductService;
+import com.shopInn.app.service.RatingService;
+
+
+@Service
+public class RatingServiceImplementation implements RatingService{
+
+	@Autowired
+	private RatingRepository ratingRepository;
+	
+	@Autowired
+	private ProductService productService;
+	
+	
+	@Override
+	public Rating createRating(RatingRequest req, User user) throws ProductException {
+		Product product=productService.findProductById(req.getProductId());
+		
+		Rating rating = new Rating();
+		rating.setProduct(product);
+		rating.setUser(user);
+		rating.setRating(req.getRating());
+		rating.setCreatedAt(LocalDateTime.now());
+
+		return ratingRepository.save(rating);
+	}
+
+	@Override
+	public List<Rating> getProductsRating(Long productId) {
+		return ratingRepository.getAllProductsRating(productId);
+	}
+
+}

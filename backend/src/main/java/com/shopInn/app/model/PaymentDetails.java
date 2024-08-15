@@ -1,13 +1,13 @@
 package com.shopInn.app.model;
 
-import com.shopInn.app.user.domain.PaymentMethod;
-import com.shopInn.app.user.domain.PaymentStatus;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class PaymentDetails {
 
-	private PaymentMethod paymentMethod;
+	private String paymentMethod;
 	
-	private PaymentStatus status;
+	private String status;
 	
 	private String paymentId;
 	
@@ -21,34 +21,53 @@ public class PaymentDetails {
 
 	public PaymentDetails() {}
 
-	public PaymentDetails(PaymentMethod paymentMethod, PaymentStatus status, String paymentId,
-			String razorpayPaymentLinkId, String razorpayPaymentLinkReferenceId, String razorpayPaymentLinkStatus,
-			String razorpayPaymentId) {
-		super();
-		this.paymentMethod = paymentMethod;
-		this.status = status;
-		this.paymentId = paymentId;
-		this.razorpayPaymentLinkId = razorpayPaymentLinkId;
-		this.razorpayPaymentLinkReferenceId = razorpayPaymentLinkReferenceId;
-		this.razorpayPaymentLinkStatus = razorpayPaymentLinkStatus;
-		this.razorpayPaymentId = razorpayPaymentId;
-	}
+	
 
-	public PaymentMethod getPaymentMethod() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	public String getPaymentMethod() {
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
+
+
+
+
+
+
+	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
 
-	public PaymentStatus getStatus() {
+
+
+
+
+
+
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(PaymentStatus status) {
+
+
+	public void setStatus(String status) {
 		this.status = status;
 	}
+
+
 
 	public String getPaymentId() {
 		return paymentId;
