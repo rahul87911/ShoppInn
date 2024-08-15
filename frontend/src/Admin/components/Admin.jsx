@@ -19,18 +19,22 @@ import PeopleIcon from "@mui/icons-material/People";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import StoreIcon from "@mui/icons-material/Store";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CreateProductForm from '../components/CreateProductForm';
-import ProductsTable from '../components/ProductsTable';
-import CustomersTable from '../components/CustomersTable';
-import OrdersTable from '../components/OrdersTable';
-import AdminDashboard from '../components/AdminDashboard';
+import CreateProductForm from "../components/CreateProductForm";
+import ProductsTable from "../components/ProductsTable";
+import CustomersTable from "../components/CustomersTable";
+import OrdersTable from "../components/OrdersTable";
+import AdminDashboard from "../components/AdminDashboard";
 
 const menu = [
   { name: "Dashboard", path: "/admin", icon: <DashboardIcon /> },
   { name: "Products", path: "/admin/products", icon: <StoreIcon /> },
   { name: "Customers", path: "/admin/customers", icon: <PeopleIcon /> },
   { name: "Orders", path: "/admin/orders", icon: <ReceiptIcon /> },
-  { name: "AddProduct", path: "/admin/product/create", icon: <AddCircleOutlineIcon /> },
+  {
+    name: "AddProduct",
+    path: "/admin/product/create",
+    icon: <AddCircleOutlineIcon />,
+  },
 ];
 
 const Admin = () => {
@@ -42,26 +46,22 @@ const Admin = () => {
   const drawer = (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
       <List>
         {menu.map((item, index) => (
           <ListItem key={item.name} disablePadding>
             <ListItemButton onClick={() => navigate(item.path)}>
-              <ListItemIcon>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText>
-                {item.name}
-              </ListItemText>
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText>{item.name}</ListItemText>
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-      <Box sx={{ marginTop: 'auto' }}>
+      <Box sx={{ marginTop: "auto" }}>
         <List>
           <ListItem disablePadding>
             <ListItemButton>
@@ -77,39 +77,22 @@ const Admin = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <Drawer
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: 240,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        {drawer}
-      </Drawer>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          marginLeft: 240, 
-        }}
-      >
-        <Routes>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/product/create" element={<CreateProductForm />} />
-          <Route path="/admin/products" element={<ProductsTable />} />
-          <Route path="/admin/orders" element={<OrdersTable />} />
-          <Route path="/admin/customers" element={<CustomersTable />} />
-        </Routes>
-      </Box>
-    </Box>
+
+      <div className="flex h-[100vh]">
+        <CssBaseline />
+        <div className="w-[15%] border border-r-gray-300 h-full">
+          {drawer}
+        </div>
+          <div className="w-[85%]">
+          <Routes>
+            <Route path="/" element={<AdminDashboard />} />
+            <Route path="/admin/product/create" element={<CreateProductForm />}/>
+            <Route path="/admin/products" element={<ProductsTable />} />
+            <Route path="/admin/orders" element={<OrdersTable />} />
+            <Route path="/admin/customers" element={<CustomersTable />} />
+          </Routes>
+          </div>
+      </div>
   );
 };
 
