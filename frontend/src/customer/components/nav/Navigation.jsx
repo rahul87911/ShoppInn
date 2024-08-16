@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -6,11 +6,16 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Link, useNavigate } from "react-router-dom";
+
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, Button, Menu, MenuItem } from "@mui/material";
-import { navigation } from "./navigationData"; // Assumes you have a navigationData file
+import { navigation } from "../../../config/navigationMenu";
+import AuthModal from "../../Auth/AuthModal";
+import { useDispatch, useSelector } from "react-redux";
 import { deepPurple } from "@mui/material/colors";
-import shopinnlogo from "../../../assets/Untitled__3_-removebg-preview.png" 
+import { getUser, logout } from "../../../State/Auth/Action";
+import { getCart } from "../../../Redux/Customers/Cart/Action";
+import TextField from "@mui/material/TextField";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,21 +24,60 @@ function classNames(...classes) {
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { auth, cart } = useSelector((store) => store);
+  const [openAuthModal, setOpenAuthModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openUserMenu = Boolean(anchorEl);
+  const jwt = localStorage.getItem("jwt");
+  const location = useLocation();
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getUser(jwt));
+      dispatch(getCart(jwt));
+    }
+  }, [jwt]);
 
   const handleUserClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (event) => {
     setAnchorEl(null);
+  };
+
+  const handleOpen = () => {
+    setOpenAuthModal(true);
+  };
+  const handleClose = () => {
+    setOpenAuthModal(false);
   };
 
   const handleCategoryClick = (category, section, item, close) => {
     navigate(`/${category.id}/${section.id}/${item.id}`);
     close();
   };
+
+  useEffect(() => {
+    if (auth.user) {
+      handleClose();
+    }
+    if (location.pathname === "/login" || location.pathname === "/register") {
+      navigate(-1);
+    }
+  }, [auth.user]);
+
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    dispatch(logout());
+  };
+  const handleMyOrderClick = () => {
+    handleCloseUserMenu();
+    auth.user?.role === "ROLE_ADMIN"
+      ? navigate("/admin")
+      : navigate("/account/order");
+  };
+
   return (
     <div className="bg-white pb-10">
       {/* Mobile menu */}
@@ -181,6 +225,20 @@ export default function Navigation() {
                     </a>
                   </div>
                 </div>
+
+                <div className="border-t border-gray-200 px-4 py-6">
+                  <a href="/" className="-m-2 flex items-center p-2">
+                    <img
+                      src="https://tailwindui.com/img/flags/flag-canada.svg"
+                      alt=""
+                      className="block h-auto w-5 flex-shrink-0"
+                    />
+                    <span className="ml-3 block text-base font-medium text-gray-900">
+                      CAD
+                    </span>
+                    <span className="sr-only">, change currency</span>
+                  </a>
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -189,7 +247,7 @@ export default function Navigation() {
 
       <header className="relative bg-white">
         <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Get free delivery on orders over ₹500
+          Get free delivery on orders over $100
         </p>
 
         <nav aria-label="Top" className="mx-auto">
@@ -207,11 +265,11 @@ export default function Navigation() {
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
                 <Link to="/">
-                  <span className="sr-only">ShopInn</span>
+                  <span className="sr-only">Your Company</span>
                   <img
-                    src={shopinnlogo}
-                    alt="ShopInn"
-                    className="h-12 w-12 mr-2"
+                    src="https://res.cloudinary.com/ddkso1wxi/image/upload/v1675919455/Logo/Copy_of_Zosh_Academy_nblljp.png"
+                    alt="Shopwithzosh"
+                    className="h-8 w-8 mr-2"
                   />
                 </Link>
               </div>
@@ -246,7 +304,7 @@ export default function Navigation() {
                             leaveTo="opacity-0"
                           >
                             <Popover.Panel className="absolute inset-x-0 top-full text-sm text-gray-500">
-                              {/* Mega menus */}
+                              {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                               <div
                                 className="absolute inset-0 top-1/2 bg-white shadow"
                                 aria-hidden="true"
@@ -254,7 +312,7 @@ export default function Navigation() {
 
                               <div className="relative bg-white">
                                 <div className="mx-auto max-w-7xl px-8">
-                                  <div className="grid grid-cols-2 gap-y-10 gap-x-8 py-16">
+                                  <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
                                     <div className="col-start-2 grid grid-cols-2 gap-x-8">
                                       {category.featured.map((item) => (
                                         <div
@@ -268,8 +326,8 @@ export default function Navigation() {
                                               className="object-cover object-center"
                                             />
                                           </div>
-                                          <Link
-                                            to={item.href}
+                                          <a
+                                            href={item.href}
                                             className="mt-6 block font-medium text-gray-900"
                                           >
                                             <span
@@ -277,7 +335,7 @@ export default function Navigation() {
                                               aria-hidden="true"
                                             />
                                             {item.name}
-                                          </Link>
+                                          </a>
                                           <p
                                             aria-hidden="true"
                                             className="mt-1"
@@ -287,7 +345,7 @@ export default function Navigation() {
                                         </div>
                                       ))}
                                     </div>
-                                    <div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
+                                    <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
                                       {category.sections.map((section) => (
                                         <div key={section.name}>
                                           <p
@@ -308,7 +366,6 @@ export default function Navigation() {
                                                 className="flex"
                                               >
                                                 <p
-                                                  className="hover:text-gray-800"
                                                   onClick={() =>
                                                     handleCategoryClick(
                                                       category,
@@ -317,6 +374,7 @@ export default function Navigation() {
                                                       close
                                                     )
                                                   }
+                                                  className="cursor-pointer hover:text-gray-800"
                                                 >
                                                   {item.name}
                                                 </p>
@@ -337,70 +395,107 @@ export default function Navigation() {
                   ))}
 
                   {navigation.pages.map((page) => (
-                    <Link
+                    <a
                       key={page.name}
-                      to={page.href}
+                      href={page.href}
                       className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       {page.name}
-                    </Link>
+                    </a>
                   ))}
                 </div>
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                {/* Search */}
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <MagnifyingGlassIcon
-                    className="h-6 w-6 cursor-pointer"
-                    aria-hidden="true"
-                    onClick={() => navigate("/search")}
-                  />
+                  {auth.user ? (
+                    <div>
+                      <Avatar
+                        className="text-white"
+                        onClick={handleUserClick}
+                        aria-controls={open ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        // onClick={handleUserClick}
+                        sx={{
+                          bgcolor: deepPurple[500],
+                          color: "white",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {auth.user?.firstName[0].toUpperCase()}
+                      </Avatar>
+                      {/* <Button
+                        id="basic-button"
+                        aria-controls={open ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        onClick={handleUserClick}
+                      >
+                        Dashboard
+                      </Button> */}
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openUserMenu}
+                        onClose={handleCloseUserMenu}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                      >
+                        <MenuItem onClick={handleMyOrderClick}>
+                          {auth.user?.role === "ROLE_ADMIN"
+                            ? "Admin Dashboard"
+                            : "My Orders"}
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                      </Menu>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={handleOpen}
+                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                    >
+                      Signin
+                    </Button>
+                  )}
                 </div>
 
-                {/* User Account */}
-                <div className="ml-6 flex items-center">
-                  <Button onClick={handleUserClick}>
-                    <Avatar sx={{ bgcolor: deepPurple[500] }}>R</Avatar>
-                  </Button>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={openUserMenu}
-                    onClose={handleCloseUserMenu}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                  >
-                    <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-                    <MenuItem onClick={()=>navigate("/account/order")}>My order</MenuItem>
-                    <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem>
-                    <MenuItem onClick={handleCloseUserMenu}>Logout</MenuItem>
-                  </Menu>
+                {/* Search */}
+                <div className="flex items-center lg:ml-6">
+                
+                  <p onClick={()=>navigate("/products/search")} className="p-2 text-gray-400 hover:text-gray-500">
+                    <span className="sr-only">Search</span>
+                    
+                    <MagnifyingGlassIcon
+                      className="h-6 w-6"
+                      aria-hidden="true"
+                    />
+                  </p>
                 </div>
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <Link to="/cart" className="group -m-2 flex items-center p-2">
+                  <Button
+                    onClick={() => navigate("/cart")}
+                    className="group -m-2 flex items-center p-2"
+                  >
                     <ShoppingBagIcon
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      0 {/* Replace this with dynamic cart item count */}
+                      {cart.cart?.totalItem}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </Link>
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </nav>
       </header>
+      <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
   );
 }
