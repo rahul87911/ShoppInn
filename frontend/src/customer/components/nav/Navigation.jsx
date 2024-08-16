@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -13,7 +13,7 @@ import { deepPurple } from "@mui/material/colors";
 import shopinnlogo from "../../../assets/Untitled__3_-removebg-preview.png" 
 import AuthModal from './../../Auth/AuthModal';
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../../State/Auth/Action";
+import { getUser, logout } from "../../../State/Auth/Action";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -59,6 +59,27 @@ export default function Navigation() {
     navigate(`/${category.id}/${section.id}/${item.id}`);
     close();
   };
+
+  
+  useEffect(()=>{
+    if(jwt){
+     dispatch(getUser(jwt))
+    }
+
+ },[jwt,auth.jwt])
+
+ 
+ useEffect(()=>{
+  if(auth.user)
+  {
+    handleClose()
+  }
+  if(location.pathname==="/login" || location.pathname==="/register")
+  {
+    navigate(-1)
+  }
+},[auth.user])
+
 
   const handleLogout = () => {
     handleCloseUserMenu();
