@@ -84,26 +84,58 @@ export default function Product() {
   navigate({search:`?${query}`})
   }
 
-  useEffect(()=>{
-  const[minPrice,maxPrice]=priceValue==null?[0,10000]:priceValue.split("-").map(Number);
-
-  const data={
-    category:param.levelThree,
-    colors:colorValue || [],
-    sizes:sizeValue || [],
-    minPrice,
-    maxPrice,
-    minDiscount:discount || 0,
-    sort:sortValue || "price_low",
-    pageNumber:pageNumber - 1,
-    pageSize:10,
-    stock:stock,
-  }
-
-  dispatch(findProducts(data))
 
 
-  },[param.levelThree,colorValue,sizeValue,priceValue,discount,sortValue,pageNumber,stock])
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+  useEffect(() => {
+    const [minPrice, maxPrice] =
+      priceValue === null ? [0, 0] : priceValue.split("-").map(Number);
+    const data = {
+      category: param.levelThree,
+      colors: colorValue || [],
+      sizes: sizeValue || [],
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 10000,
+      minDiscount: discount || 0,
+      sort: sortValue || "price_low",
+      pageNumber: 0,
+      pageSize: 10,
+      stock: stock,
+    };
+    dispatch(findProducts(data));
+  }, [
+    param.levelThree,
+    colorValue,
+    sizeValue,
+    priceValue,
+    discount,
+    sortValue,
+    pageNumber,
+    stock,
+  ]);
+
+
+
+
+
+
 
   return (
     <div className="bg-white">

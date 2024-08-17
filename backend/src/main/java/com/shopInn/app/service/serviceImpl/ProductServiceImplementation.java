@@ -207,38 +207,48 @@ public class ProductServiceImplementation implements ProductService {
 	
 	
 	@Override
-	public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizes, Integer minPrice,
-			Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
-		
-		Pageable pageable=PageRequest.of(pageNumber, pageSize);
-		
-		List<Product> products=productRepository.filterProducts(category, minPrice, maxPrice, minDiscount, sort);
-		
-		if(!colors.isEmpty())
-		{
-			products=products.stream().filter(p->colors.stream().anyMatch(c->c.equalsIgnoreCase(p.getColor())))
-					.collect(Collectors.toList());
-		}
-		
-		if(stock!=null)
-		{
-			if(stock.equals("in_stock")) {
-			  products=products.stream().filter(p->p.getQuantity()>0).collect(Collectors.toList());	
-			}
-			else if(stock.equals("out_of_stock")) {
-			  products=products.stream().filter(p->p.getQuantity()<1).collect(Collectors.toList());
-			}
-		}
-		
-		int startIndex=(int)pageable.getOffset();
-		int endIndex=Math.min(startIndex+pageable.getPageSize(),products.size());
-		
-		List<Product>pageContent=products.subList(startIndex, endIndex);
-		
-		Page<Product>filteredProducts=new PageImpl<>(pageContent,pageable,products.size());
-		return filteredProducts;
-	}
+	public Page<Product> getAllProduct(String category, List<String>colors, 
+			List<String> sizes, Integer minPrice, Integer maxPrice, 
+			Integer minDiscount,String sort, String stock, Integer pageNumber, Integer pageSize ) {
 
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		
+		List<Product> products = productRepository.filterProducts(category, minPrice, maxPrice, minDiscount, sort);
+		
+		
+		if (!colors.isEmpty()) {
+			products = products.stream()
+			        .filter(p -> colors.stream().anyMatch(c -> c.equalsIgnoreCase(p.getColor())))
+			        .collect(Collectors.toList());
+		
+		
+		} 
+
+		if(stock!=null) {
+
+			if(stock.equals("in_stock")) {
+				products=products.stream().filter(p->p.getQuantity()>0).collect(Collectors.toList());
+			}
+			else if (stock.equals("out_of_stock")) {
+				products=products.stream().filter(p->p.getQuantity()<1).collect(Collectors.toList());				
+			}
+				
+					
+		}
+		int startIndex = (int) pageable.getOffset();
+		int endIndex = Math.min(startIndex + pageable.getPageSize(), products.size());
+		
+		 if (startIndex < 0) {
+	            startIndex = 0; // Default to zero if negative pageNumber is provided
+	        }
+		
+
+		List<Product> pageContent = products.subList(startIndex, endIndex);
+		Page<Product> filteredProducts = new PageImpl<>(pageContent, pageable, products.size());
+	    return filteredProducts; // If color list is empty, do nothing and return all products
+		
+		
+	}
 
 
 
