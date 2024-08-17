@@ -41,64 +41,61 @@ public class ProductServiceImplementation implements ProductService {
 	
 	
 	
-	
 	@Override
 	public Product createProduct(CreateProductRequest req) {
-		
-		Category topLevel=categoryRepository.findByName(req.getTopLevelCategory()); 
-		
-		if(topLevel==null) {
-			Category topLevelCategory=new Category();
-			topLevelCategory.setName(req.getTopLevelCategory());
-			topLevelCategory.setLevel(1);
-			
-			topLevel=categoryRepository.save(topLevelCategory);
-		}
-		
-		
-		Category secondLevel=categoryRepository.findByNameAndParent(req.getSecondLevelCategory(),topLevel.getName());
-		
-		if(secondLevel==null) {
-			Category secondLevelCategory=new Category();
-			secondLevelCategory.setName(req.getSecondLevelCategory());
-			secondLevelCategory.setParentCategory(topLevel);
-			secondLevelCategory.setLevel(2);
-			
-			secondLevel=categoryRepository.save(secondLevelCategory);
-		}
-		
-		Category thirdLevel=categoryRepository.findByNameAndParent(req.getThirdLevelCategory(), secondLevel.getName());
-		if(thirdLevel==null)
-		{
-			Category thirdLevelCategory=new Category();
-			thirdLevelCategory.setName(req.getThirdLevelCategory());
-			thirdLevelCategory.setParentCategory(secondLevel);
-			thirdLevelCategory.setLevel(3);
-			
-			thirdLevel=categoryRepository.save(thirdLevelCategory);
-		}
-		
-		
-		
-		Product product=new Product();
-		product.setTitle(req.getTitle());
-		product.setColor(req.getColor());
-		product.setDescription(req.getDescription());
-		product.setDiscountedPrice(req.getDiscountedPrice());
-		product.setDiscountedPrice(req.getDiscountPercent());
-		product.setImageUrl(req.getImageUrl());
-		product.setBrand(req.getBrand());
-		product.setPrice(req.getPrice());
-		product.setSizes(req.getSize());
-		product.setQuantity(req.getQuantity());
-		product.setCategory(thirdLevel);
-		product.setCreatedAt(LocalDateTime.now());
-		
-		Product savedProduct=productRepository.save(product);
-		
-		
-		return savedProduct;
+	    // Handling top-level category
+	    Category topLevel = categoryRepository.findByName(req.getTopLevelCategory());
+	    
+	    if (topLevel == null) {
+	        Category topLevelCategory = new Category();
+	        topLevelCategory.setName(req.getTopLevelCategory());
+	        topLevelCategory.setLevel(1);
+	       
+	        topLevel = categoryRepository.save(topLevelCategory);
+	    }
+
+	    // Handling second-level category
+	    Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLevelCategory(), topLevel.getName());
+	    
+	    if (secondLevel == null) {
+	        Category secondLevelCategory = new Category();
+	        secondLevelCategory.setName(req.getSecondLevelCategory());
+	        secondLevelCategory.setParentCategory(topLevel); // Parent is the top-level category
+	        secondLevelCategory.setLevel(2);
+	        secondLevel = categoryRepository.save(secondLevelCategory);
+	    }
+
+	    // Handling third-level category
+	    Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLevelCategory(), secondLevel.getName());
+	    
+	    if (thirdLevel == null) {
+	        Category thirdLevelCategory = new Category();
+	        thirdLevelCategory.setName(req.getThirdLevelCategory());
+	        thirdLevelCategory.setParentCategory(secondLevel); // Parent is the second-level category
+	        thirdLevelCategory.setLevel(3);
+	        thirdLevel = categoryRepository.save(thirdLevelCategory);
+	    }
+
+	    // Creating the product and associating it with the third-level category
+	    Product product = new Product();
+	    product.setTitle(req.getTitle());
+	    product.setColor(req.getColor());
+	    product.setDescription(req.getDescription());
+	    product.setDiscountedPrice(req.getDiscountedPrice());
+	    product.setDiscountedPrice(req.getDiscountPercent());
+	    product.setImageUrl(req.getImageUrl());
+	    product.setBrand(req.getBrand());
+	    product.setPrice(req.getPrice());
+	    product.setSizes(req.getSize());
+	    product.setQuantity(req.getQuantity());
+	    product.setCategory(thirdLevel); // Associating with the third-level category
+	    product.setCreatedAt(LocalDateTime.now());
+
+	    Product savedProduct = productRepository.save(product);
+
+	    return savedProduct;
 	}
+
 
 	
 	

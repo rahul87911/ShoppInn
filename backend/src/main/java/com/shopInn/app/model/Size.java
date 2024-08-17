@@ -1,5 +1,8 @@
 package com.shopInn.app.model;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Size {
 
 	private String name;
