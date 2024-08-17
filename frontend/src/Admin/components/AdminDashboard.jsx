@@ -15,7 +15,7 @@ const AdminDashboard = () => {
         <Grid item xs={12} md={8}>
           <MonthlyOverview />
         </Grid>
-        <Grid item xs={6} md={6}>
+        <Grid>
           <ProductsTable/>
         </Grid>
       </Grid>
