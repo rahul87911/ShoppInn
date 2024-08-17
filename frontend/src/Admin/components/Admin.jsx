@@ -30,11 +30,7 @@ const menu = [
   { name: "Products", path: "/admin/products", icon: <StoreIcon /> },
   { name: "Customers", path: "/admin/customers", icon: <PeopleIcon /> },
   { name: "Orders", path: "/admin/orders", icon: <ReceiptIcon /> },
-  {
-    name: "AddProduct",
-    path: "/admin/product/create",
-    icon: <AddCircleOutlineIcon />,
-  },
+  { name: "AddProduct", path: "/admin/product/create", icon: <AddCircleOutlineIcon />},
 ];
 
 const Admin = () => {
