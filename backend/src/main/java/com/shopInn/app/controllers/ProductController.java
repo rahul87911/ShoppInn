@@ -24,7 +24,7 @@ public class ProductController {
 	
 	
 	@GetMapping("/products")
-	public ResponseEntity<Page<Product>> findProductByCategoryHandler(@RequestParam String category,
+	public ResponseEntity<Page<Product>>findProductByCategoryHandler(@RequestParam String category,
 			@RequestParam List<String>color,@RequestParam List<String> size,@RequestParam Integer minPrice,
 			@RequestParam Integer maxPrice, @RequestParam Integer minDiscount, @RequestParam String sort, 
 			@RequestParam String stock, @RequestParam Integer pageNumber,@RequestParam Integer pageSize){

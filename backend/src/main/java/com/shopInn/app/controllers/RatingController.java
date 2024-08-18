@@ -44,7 +44,7 @@ public class RatingController {
 	
 	
 	@GetMapping("/product/{productId}")
-	public ResponseEntity<List<Rating>> getProductsRating(@PathVariable Long productId, @RequestHeader("Authorization")String jwt) throws UserException,ProductException
+	public ResponseEntity<List<Rating>>getProductsRating(@PathVariable Long productId, @RequestHeader("Authorization")String jwt) throws UserException,ProductException
 	{
 		User user=userService.findUserProfileByJwt(jwt); 
 		

@@ -1,5 +1,7 @@
 package com.shopInn.app.controllers;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -55,6 +57,7 @@ public class AuthController {
 		String firstName=user.getFirstName();
 		String lastName=user.getLastName();
 		
+		
 		User isEmailExist=userRepository.findByEmail(email);
 		
 		if(isEmailExist!=null)
@@ -67,7 +70,7 @@ public class AuthController {
 		createdUser.setPassword(passwordEncoder.encode(password));
 		createdUser.setFirstName(firstName);
 		createdUser.setLastName(lastName);
-		
+		createdUser.setCreatedAt(LocalDateTime.now());
 		User savedUser= userRepository.save(createdUser);
 		
 		Authentication authentication= new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());

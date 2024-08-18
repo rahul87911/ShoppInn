@@ -34,7 +34,7 @@ public class ReviewController {
 	
 	
 	@PostMapping("/create")
-	public ResponseEntity<Review> createReview(@RequestBody ReviewRequest req,@RequestHeader("Authorization")String jwt) throws UserException,ProductException
+	public ResponseEntity<Review>createReview(@RequestBody ReviewRequest req,@RequestHeader("Authorization")String jwt) throws UserException,ProductException
 	{
 		User user=userService.findUserProfileByJwt(jwt);
 		
@@ -45,7 +45,7 @@ public class ReviewController {
 	
 	
 	@GetMapping("/product/{productId}")
-	public ResponseEntity<List<Review>> getProductsReview(@PathVariable Long productId) throws UserException,ProductException
+	public ResponseEntity<List<Review>>getProductsReview(@PathVariable Long productId) throws UserException,ProductException
 	{
 		List<Review>reviews=reviewService.getAllReview(productId);
 		

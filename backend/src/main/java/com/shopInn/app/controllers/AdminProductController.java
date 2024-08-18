@@ -50,7 +50,7 @@ public class AdminProductController {
 	
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<Product>> findAllProduct(){
+	public ResponseEntity<List<Product>>findAllProduct(){
 		List<Product> products=productService.findAllProducts();
 		
 		return new ResponseEntity<>(products,HttpStatus.OK);
