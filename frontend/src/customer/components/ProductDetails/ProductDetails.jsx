@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { Box, Button, Grid, LinearProgress, Rating } from "@mui/material";
@@ -6,7 +6,10 @@ import { color } from "./../../../data/FilterData";
 import ProductReviewCard from "./ProductReviewCard";
 import { mens_kurta } from './../../../data/mens_kurta';
 import HomeSectionCard from './../HomeSectionCard/HomeSectionCard';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { findProductsById } from "../../../State/Product/Action";
+import { addItemToCart } from "../../../State/Cart/Action";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -63,12 +66,40 @@ function classNames(...classes) {
 }
 
 export default function ProductDetails() {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+
+  const [selectedSize, setSelectedSize] = useState("");
+  const [activeImage, setActiveImage] = useState(null);
   const navigate = useNavigate();
+  const params= useParams();
+  const dispatch=useDispatch();
+  const {products}=useSelector(store=>store);
+
+
   const handleAddToCart=() => {
+
+    const data={productId:params.productID,size:selectedSize.name}
+    console.log("item to add---->  ",data);
+
+    dispatch(addItemToCart(data));
     navigate("/cart")
   }
+
+  
+  const handleSetActiveImage = (image) => {
+    setActiveImage(image);
+  };
+ console.log("pr Id-> ",params.productID);
+console.log("dasfdsf  ",products);
+
+
+ useEffect(() => {
+  const data = { productID: params.productID };
+  console.log("Product ID: ", data.productID);
+  
+  dispatch(findProductsById(data));
+}, [params.productID, dispatch]);
+
+
   return (
     <div className="bg-white lg:px-20">
       <div className="pt-6">
@@ -117,7 +148,7 @@ export default function ProductDetails() {
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
               <img
                 alt={product.images[0].alt}
-                src={product.images[0].src}
+                src={products.product?.imageUrl}
                 className="h-full w-full object-cover object-center"
               />
             </div>
@@ -138,22 +169,21 @@ export default function ProductDetails() {
           <div className="lg:col-span-1 maxt-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2 ">
               <h1 className="text-lg lg:text-xl font-semibold text-grey-900 text-left">
-                Levi's
+               {products.product?.brand}
               </h1>
               <h1 className="text-lg lg:text-xl text-grey-900 opacity-60 pt-1 text-left">
-                {product.name}
+                {products.product?.title}
               </h1>
             </div>
 
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Product information</h2>
               <div className="flex space-x-5 item-center text-lg lg:text-xl text-grey-900 mt-6 text-left">
-                <p className="font-semibold">₹ 199</p>
+                <p className="font-semibold">₹ {products.product?.discountedPrice}</p>
 
-                <p className="opacity-50 line-through">₹ 211</p>
+                <p className="opacity-50 line-through">₹ {products.product?.price}</p>
 
-                <p className="text-green-600 font-semibold">5% Off</p>
+                <p className="text-green-600 font-semibold">{products.product?.discountPercent}% Off</p>
               </div>
 
               {/* Reviews */}
@@ -240,11 +270,11 @@ export default function ProductDetails() {
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
               {/* Description and details */}
               <div>
-                <h3 className="sr-only">Description</h3>
+            
 
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
-                    {product.description}
+                    {products.product?.description}
                   </p>
                 </div>
               </div>
@@ -269,7 +299,7 @@ export default function ProductDetails() {
                 <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
                 <div className="mt-4 space-y-6">
-                  <p className="text-sm text-gray-600">{product.details}</p>
+                  <p className="text-sm text-gray-600">{products.product?.description}</p>
                 </div>
               </div>
             </div>

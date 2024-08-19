@@ -45,7 +45,7 @@ public class CartController {
 		cartService.addCartItem(user.getId(), req);
 		
 		ApiResponse res=new ApiResponse();
-		res.setMessage("itemadded to cart");
+		res.setMessage("item added to cart");
 		res.setStatus(true);
 		
 		return new ResponseEntity<>(res,HttpStatus.OK);

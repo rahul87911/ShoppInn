@@ -13,12 +13,12 @@ import {
 } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { mens_kurta } from './../../../data/mens_kurta';
+
 import ProductCard from './ProductCard';
 import { filters, singleFilter } from '../../../data/FilterData';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { findProducts } from '../../../State/Product/Action';
+import { useDispatch, useSelector } from 'react-redux';
+import { findAllProducts, findProducts } from '../../../State/Product/Action';
 
 const sortOptions = [
   { name: 'Price: Low to High', href: '#', current: false },
@@ -31,22 +31,25 @@ function classNames(...classes) {
 
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+
   const location = useLocation();
   const navigate =  useNavigate();
-  const param=useParams();
+  // const param=useParams();
   const dispatch=useDispatch();
+  const { products} = useSelector((store) => store);
+  console.log(products);
 
 
-  const decodedQueryString=decodeURIComponent(location.search);
-  const searchParams=new URLSearchParams(decodedQueryString);
+  // const decodedQueryString=decodeURIComponent(location.search);
+  // const searchParams=new URLSearchParams(decodedQueryString);
 
-  const colorValue=searchParams.get("color")
-  const sizeValue=searchParams.get("color")
-  const priceValue=searchParams.get("color")
-  const discount=searchParams.get("color")
-  const sortValue=searchParams.get("color")
-  const pageNumber=searchParams.get("color")
-  const stock=searchParams.get("color")
+  // const colorValue=searchParams.get("color")
+  // const sizeValue=searchParams.get("color")
+  // const priceValue=searchParams.get("color")
+  // const discount=searchParams.get("color")
+  // const sortValue=searchParams.get("color")
+  // const pageNumber=searchParams.get("color")
+  // const stock=searchParams.get("color")
 
 
   const handleFilter=(value,sectionId)=>{
@@ -85,11 +88,10 @@ export default function Product() {
   }
 
 
-
-
-
-
-
+  useEffect(() => {
+    dispatch(findAllProducts());
+  }, [dispatch]);
+  
 
 
 
@@ -104,32 +106,32 @@ export default function Product() {
 
 
 
-  useEffect(() => {
-    const [minPrice, maxPrice] =
-      priceValue === null ? [0, 0] : priceValue.split("-").map(Number);
-    const data = {
-      category: param.levelThree,
-      colors: colorValue || [],
-      sizes: sizeValue || [],
-      minPrice: minPrice || 0,
-      maxPrice: maxPrice || 10000,
-      minDiscount: discount || 0,
-      sort: sortValue || "price_low",
-      pageNumber: Math.max(0, pageNumber - 1),
-      pageSize: 10,
-      stock: stock,
-    };
-    dispatch(findProducts(data));
-  }, [
-    param.levelThree,
-    colorValue,
-    sizeValue,
-    priceValue,
-    discount,
-    sortValue,
-    pageNumber,
-    stock,
-  ]);
+  // useEffect(() => {
+  //   const [minPrice, maxPrice] =
+  //     priceValue === null ? [0, 0] : priceValue.split("-").map(Number);
+  //   const data = {
+  //     category: param.levelThree,
+  //     colors: colorValue || [],
+  //     sizes: sizeValue || [],
+  //     minPrice: minPrice || 0,
+  //     maxPrice: maxPrice || 10000,
+  //     minDiscount: discount || 0,
+  //     sort: sortValue || "price_low",
+  //     pageNumber: Math.max(0, pageNumber - 1),
+  //     pageSize: 10,
+  //     stock: stock,
+  //   };
+  //   dispatch(findProducts(data));
+  // }, [
+  //   param.levelThree,
+  //   colorValue,
+  //   sizeValue,
+  //   priceValue,
+  //   discount,
+  //   sortValue,
+  //   pageNumber,
+  //   stock,
+  // ]);
 
 
 
@@ -246,13 +248,13 @@ export default function Product() {
                 </MenuItems>
               </Menu>
 
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+              <button type="button" className="-m-2 ml-2 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
                 <span className="sr-only">View grid</span>
                 <Squares2X2Icon aria-hidden="true" className="h-5 w-5" />
               </button>
               <button
                 type="button"
-                className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                className="-m-2 ml-2 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
                 onClick={() => setMobileFiltersOpen(true)}
               >
                 <span className="sr-only">Filters</span>
@@ -341,13 +343,20 @@ export default function Product() {
               </form>
 
                  {/* Product grid */}
-                 <div className="lg:col-span-3">
-                <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 sm:gap-y-8 lg:grid-cols-3 xl:grid-cols-4">
-                  {mens_kurta.map((item) => 
-                    <ProductCard product={item} />
-                  )}
+                 <div className="lg:col-span-3 w-full">
+                <div className="flex flex-wrap justify-center bg-white py-4">
+              {products.products && products.products?.map((item)=>(
+
+            <ProductCard  product={item} />
+              ))}
+          </div>
+      
+
                 </div>
-              </div>
+           
+
+
+              
             </div>
           </section>
         </main>

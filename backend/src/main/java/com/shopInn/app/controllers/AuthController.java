@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopInn.app.exception.UserException;
+import com.shopInn.app.model.Cart;
 import com.shopInn.app.model.User;
 import com.shopInn.app.repo.UserRepository;
 import com.shopInn.app.request.LoginRequest;
 import com.shopInn.app.response.AuthResponse;
+import com.shopInn.app.service.CartService;
 import com.shopInn.app.service.serviceImpl.CustomerUserServiceImplementation;
 import com.shopInn.appconfig.JwtProvider;
 
@@ -35,16 +37,19 @@ public class AuthController {
 	
 	private CustomerUserServiceImplementation customerUserService;
 	
+	private CartService cartService;
+	
 	
 
 
 
 	public AuthController(UserRepository userRepository, JwtProvider jwtProvider, PasswordEncoder passwordEncoder,
-			CustomerUserServiceImplementation customerUserService) {
+			CustomerUserServiceImplementation customerUserService,CartService cartService) {
 		this.userRepository = userRepository;
 		this.jwtProvider = jwtProvider;
 		this.passwordEncoder = passwordEncoder;
 		this.customerUserService = customerUserService;
+		this.cartService=cartService;
 	}
 
 
@@ -56,6 +61,8 @@ public class AuthController {
 		String password=user.getPassword();
 		String firstName=user.getFirstName();
 		String lastName=user.getLastName();
+		String mobileNo=user.getMobile();
+		String role="USER";
 		
 		
 		User isEmailExist=userRepository.findByEmail(email);
@@ -71,7 +78,10 @@ public class AuthController {
 		createdUser.setFirstName(firstName);
 		createdUser.setLastName(lastName);
 		createdUser.setCreatedAt(LocalDateTime.now());
+		createdUser.setMobile(mobileNo);
+		createdUser.setRole(role);
 		User savedUser= userRepository.save(createdUser);
+		Cart cart=cartService.createCart(savedUser);
 		
 		Authentication authentication= new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
 		
